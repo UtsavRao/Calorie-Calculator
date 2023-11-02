@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Calculator</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #FFD700, #FFA500, #000);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Center the heading in the header */
+        h1 {
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            height: auto; /* Adjusted the height to "auto" */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s;
+        }
+
+        .activity-page {
+            display: none;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #FFA500;
+            border-radius: 5px;
+        }
+
+        /* Fixed width for input fields */
+        input[type="number"] {
+            width: 80px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #FFD700, #FFA500, #000);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #FFA500, #FFD700, #000);
+        }
+
+        #back-button {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Add a blur effect to the background image */
+        body::before {
+            content: "";
+            background-image: url('cloud.jpg');
+            background-size: cover;
+            position: fixed;
+            top: 0;
+            left: 20%;
+            width: 100%;
+            height: 100%;
+            filter: blur(3px);
+            z-index: -1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calorie Calculator</h1>
+    </header>
+    <main>
+        <div class="calculator" id="calculator">
+            <div id="personal-info">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" placeholder="Enter your weight" required><br>
+
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" placeholder="Enter your height" required><br>
+
+                <label for="age">Age (years):</label>
+                <input type="number" id="age" placeholder="Enter your age" required><br>
+
+                <label for="sex">Sex:</label>
+                <select id="sex">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select><br>
+
+                <button onclick="showActivityPage()">Next</button>
+            </div>
+
+            <div class="activity-page" id="activity-page">
+                <label for="activity-level">Exercise Level:</label>
+                <select id="activity-level">
+                    <option value="1.2">Sedentary (Little or no exercise)</option>
+                    <option value="1.375">Lightly active (Light exercise or sports 1-3 days a week)</option>
+                    <option value="1.55">Moderately active (Moderate exercise or sports 3-5 days a week)</option>
+                    <option value="1.725">Very active (Hard exercise or sports 6-7 days a week)</option>
+                    <option value="1.9">Super active (Very hard exercise, physical job, or training twice a day)</option>
+                </select><br>
+
+                <button onclick="calculateCalories()">Calculate</button>
+
+                <!-- "Back" button to go back to the previous page -->
+                <div id="back-button">
+                    <button onclick="goBack()">Back</button>
+                </div>
+            </div>
+
+            <div id="result">
+                <p>Your estimated daily calorie needs are:</p>
+                <h2 id="calories">0 calories per day</h2>
+            </div>
+        </div>
+    </main>
+    <script>
+        function showActivityPage() {
+            const personalInfo = document.getElementById("personal-info");
+            const activityPage = document.getElementById("activity-page");
+
+            personalInfo.style.display = "none";
+            activityPage.style.display = "block";
+        }
+
+        function calculateCalories() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseFloat(document.getElementById('age').value);
+            const sex = document.getElementById('sex').value;
+            const activityLevel = parseFloat(document.getElementById('activity-level').value);
+
+            const bmr = sex === 'male' ?
+                88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age) :
+                447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+
+            const calories = bmr * activityLevel;
+
+            const resultElement = document.getElementById('result');
+            const caloriesElement = document.getElementById('calories');
+
+            resultElement.style.display = "block";
+            caloriesElement.textContent = `${calories.toFixed(2)} calories per day`;
+        }
+
+        function goBack() {
+            const personalInfo = document.getElementById("personal-info");
+            const activityPage = document.getElementById("activity-page");
+
+            personalInfo.style.display = "block";
+            activityPage.style.display = "none";
+        }
+    </script>
+</body>
+</html>
